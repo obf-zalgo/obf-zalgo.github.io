@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+	<link rel="icon" type="image/png" href="images/icon.png">
+    <title>Zalgo OBF</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="css/styles.css">  
+</head>
+
+
+<body>
+    <div id="main_page">
+        <div class="container">
+            <div class="header">
+                <h1>Zalgo Obfuscator</h1>
+                <p class="subtitle">Obfuscate your JavaScript code into unreadable magic</p>
+            </div>
+
+            <div class="card">
+                <label class="input-label">Enter your JavaScript code:</label>
+                <textarea id="text_area" placeholder="alert(&quot;Hello World! 🚀&quot;)">alert("asdf1234 🅱")</textarea>
+            </div>
+
+            <div class="controls-grid">
+                <div class="control-group">
+                    <button class="primary-button" onclick="ObfuscateButton()">✨ Obfuscate Code</button>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">Character Set</label>
+                    <select id="charset_selector" onchange="CharsetChanged(this.value)">
+                        <option id="type_zalgo" value="zalgo">Zalgo</option>
+                        <option id="type_invisible" value="invisible">Invisible characters</option>
+                        <option value="iiii">IIII</option>
+                        <option value="lines">Lines and stuff</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                </div>
+
+
+				<div class="slider-container" id="variable_length_slider_container">
+                    <label class="slider-label" id="variable_name_length_text">Variable name length: 5</label>
+                    <input id="variable_name_length_slider" type="range" min="0" max="1" step="any" oninput="slider_variableLength(this)">
+                </div>
+
+
+                <button id="custom_charset_customizer_button" style="display: none;" onclick="ToggleCustomizeMode(true)">
+                    🎨 Customize Characters
+                </button>
+
+
+                
+
+                <div class="slider-container" id="zalgo_level_slider_container">
+                    <label class="slider-label" id="zalgo_level_text">Zalgo level: 3</label>
+                    <input id="zalgo_level_slider" type="range" min="0" max="1" step="any" oninput="slider_zalgoLevel(this)">
+                </div>
+				
+				<div class="advanced-options">
+                    <button onclick="ShowOptions(true)">⚙️ Advanced Options</button>
+                </div>
+				
+            </div>
+
+            <div class="card result-area">
+                <label class="input-label">Obfuscated Code:</label>
+                <textarea id="result_text" class="result-textarea" placeholder="Your transformed code will appear here..." readonly></textarea>
+                
+                <div class="action-buttons">
+                    <button onclick="try{eval(document.getElementById('result_text').value)}catch(e){alert(e)}">
+                        🚀 Execute Code
+                    </button>
+					
+                    <button id="copy_button" onclick="CopyResult(this)">
+						<span class="btn-label">📋 Copy Code</span>
+					</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="options_overlay" class="overlay" style="display: none;" onclick="HandleOverlayClick(event, 'options')">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">Advanced Options</div>
+            
+            <div class="option" title="Generate code to be run on the selected platform.
+			
+				Choose the 'Modern browsers' option to support modern browsers only.
+				Choose 'Old browsers' if you want the code to run on both old and new browsers (in this case, you cannot use some of the charsets).
+				The 'Node.js' option will work for Node.js (obviously), and for most of the modern browsers as well.">
+				
+                <label class="control-label">Target Platform:</label>
+                <select style="font-size: 16px; margin-top: 10px;" onchange="CodeGenerationTargetChanged(this.value)">
+                    <option value="es6+">Modern browsers (ES6 and later)</option>
+                    <option value="es5-">Old browsers (ES5 and earlier)</option>
+                    <option value="nodejs">Node.js</option>
+                </select>
+            </div>
+
+            <div class="option">
+                <label title="Check this box to generate code that will not run properly if it is deobfuscated">
+                    <input onchange="DeobfuscationProtectionChanged(this.checked)" type="checkbox"> 
+                    Deobfuscation protection
+                </label>
+            </div>
+
+            <div class="option" id="deobfuscation_protection_options" style="visibility: hidden;">
+                <label class="control-label">If deobfuscated:</label>
+                <select style="font-size: 16px; margin-top: 10px;" onchange="DeobfuscationProtectionModeChanged(this.value)">
+                    <option value="skip">Don't run your code</option>
+                    <option value="error">Throw an error</option>
+                    <option value="loop">Create an infinite loop</option>
+                    <option value="custom">Run a custom code</option>
+                </select>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px; gap: 15px;">
+                <button onclick="ShowOptions(false)">✅ Apply Settings</button>
+                <button id="custom_code_edit_button" style="display: none;" onclick="ShowCustomCodeEditor(true)">
+                    📝 Edit Custom Code
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="customize_char" class="overlay" style="display: none;" onclick="HandleOverlayClick(event, 'customize')">
+    <div class="modal" onclick="event.stopPropagation()">
+        <div class="modal-header">🎨 Custom Character Set</div>
+        <div style="margin-bottom: 20px;">
+            <label class="input-label">
+                Enter characters to use
+                <br><small style="opacity: 0.8; font-weight: 400; font-size: 0.9rem;">Repeat characters to increase their probability</small>
+            </label>
+            <textarea id="customize_text_area" placeholder="Enter your custom characters here..." style="min-height: 150px;"></textarea>
+        </div>
+        <div id="invalid_chars" style="margin-bottom: 20px;"></div>
+        <div style="display: flex; justify-content: flex-end; gap: 15px;">
+            <button onclick="ToggleCustomizeMode(false)" style="background: linear-gradient(135deg, #4ecdc4, #44a08d); flex: 1;">
+                ✅ Save Characters
+            </button>
+            <button onclick="ToggleCustomizeMode(false, true)" style="background: linear-gradient(135deg, #6c757d, #5a6268); flex: 1;">
+                ❌ Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+    <!-- Custom Code Editor Modal -->
+    <div id="custom_code_add" class="overlay" style="display: none;" onclick="HandleOverlayClick(event, 'custom_code')">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">📝 Custom Deobfuscation Code Protection</div>
+            <div style="margin-bottom: 20px;">
+                <label class="input-label">
+                    Enter your custom JavaScript code
+                    <br><small style="opacity: 0.8; font-weight: 400; font-size: 0.9rem;">This code will run if deobfuscation is detected</small>
+                </label>
+                <div style="margin-bottom: 15px; font-family: 'Consolas', monospace; font-size: 16px; color: #4ecdc4;">
+                    <span style="color: #ff6b6b;">function</span> <span style="color: #f39c12;">customFunction</span>() {
+                </div>
+                <textarea id="deobfuscation_custom_code_text_area" placeholder="window.location.href=&quot;https://youtube.com/watch?v=dQw4w9WgXcQ&quot;" style="min-height: 200px;" oninput="AutoResizeTextarea(this, 10)"></textarea>
+                <div style="margin-top: 5px; font-family: 'Consolas', monospace; font-size: 16px; color: #4ecdc4;">
+                    }
+                </div>
+            </div>
+            <div id="custom_code_invalid_chars" style="margin-bottom: 20px;"></div>
+            <div style="display: flex; justify-content: flex-end; gap: 15px;">
+                <button onclick="ShowCustomCodeEditor(false)" style="background: linear-gradient(135deg, #4ecdc4, #44a08d); flex: 1;">
+                    ✅ Save Custom Code
+                </button>
+                <button onclick="ShowCustomCodeEditor(false)" style="background: linear-gradient(135deg, #6c757d, #5a6268); flex: 1;">
+                    ❌ Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="dist/main.js" type="module"></script>
+
+</body>
+
+</html>
