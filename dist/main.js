@@ -305,7 +305,45 @@ function ObfuscateButton() {
         return;
     }
     DOM.obfuscateResultTextArea.value = result;
+	ShowDownloadButton(true);
 }
+
+
+function DownloadResult() {
+    const textarea = document.getElementById('result_text');
+    const content = textarea.value.trim();
+    
+    if (!content) {
+        alert('No obfuscated code to download');
+        return;
+    }
+    
+    // Create blob with the content
+    const blob = new Blob([content], { type: 'text/plain' });
+    
+    // Create download link
+    const downloadLink = document.createElement('a');
+    downloadLink.href = URL.createObjectURL(blob);
+    downloadLink.download = 'obfuscated_js.txt';
+    
+    // Trigger download
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+    
+    // Clean up the blob URL
+    URL.revokeObjectURL(downloadLink.href);
+}
+
+function ShowDownloadButton(show) {
+    const downloadButton = document.getElementById('download_button');
+    if (downloadButton) {
+        downloadButton.style.display = show ? 'block' : 'none';
+    }
+}
+
+
+
 // Set functions on the window object, so that they are callable from html
 const windowAny = window;
 windowAny.CopyResult = CopyResult;
@@ -321,3 +359,6 @@ windowAny.ShowCustomCodeEditor = ShowCustomCodeEditor;
 windowAny.AutoResizeTextarea = AutoResizeTextarea;
 windowAny.ObfuscateButton = ObfuscateButton;
 windowAny.HandleOverlayClick = HandleOverlayClick;
+windowAny.ShowDownloadButton = ShowDownloadButton;
+windowAny.DownloadResult = DownloadResult;
+
