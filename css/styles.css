@@ -367,6 +367,10 @@
 				padding: 20px 70px;
 			}
 			
+			.button {
+				padding: 15px 60px;
+			}
+			
             .action-buttons {
                 flex-direction: column;
             }
