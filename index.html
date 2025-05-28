@@ -118,8 +118,8 @@
             </div>
 
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px; gap: 15px;">
-                <button onclick="ShowOptions(false)">✅ Apply Settings</button>
-                <button id="custom_code_edit_button" style="display: none;" onclick="ShowCustomCodeEditor(true)">
+                <button class="modal-btn modal-btn-success" onclick="ShowOptions(false)">✅ Apply Settings</button>
+                <button id="custom_code_edit_button" class="modal-btn modal-btn-edit" style="display: none;" onclick="ShowCustomCodeEditor(true)">
                     📝 Edit Custom Code
                 </button>
             </div>
@@ -138,10 +138,10 @@
         </div>
         <div id="invalid_chars" style="margin-bottom: 20px;"></div>
         <div style="display: flex; justify-content: flex-end; gap: 15px;">
-            <button onclick="ToggleCustomizeMode(false)" style="background: linear-gradient(135deg, #4ecdc4, #44a08d); flex: 1;">
+            <button class="modal-btn modal-btn-success" onclick="ToggleCustomizeMode(false)" style="flex: 1;">
                 ✅ Save Characters
             </button>
-            <button onclick="ToggleCustomizeMode(false, true)" style="background: linear-gradient(135deg, #6c757d, #5a6268); flex: 1;">
+            <button class="modal-btn modal-btn-secondary" onclick="ToggleCustomizeMode(false, true)" style="flex: 1;">
                 ❌ Cancel
             </button>
         </div>
@@ -167,10 +167,10 @@
             </div>
             <div id="custom_code_invalid_chars" style="margin-bottom: 20px;"></div>
             <div style="display: flex; justify-content: flex-end; gap: 15px;">
-                <button onclick="ShowCustomCodeEditor(false)" style="background: linear-gradient(135deg, #4ecdc4, #44a08d); flex: 1;">
+                <button class="modal-btn modal-btn-success" onclick="ShowCustomCodeEditor(false)" style="flex: 1;">
                     ✅ Save Custom Code
                 </button>
-                <button onclick="ShowCustomCodeEditor(false)" style="background: linear-gradient(135deg, #6c757d, #5a6268); flex: 1;">
+                <button class="modal-btn modal-btn-secondary" onclick="ShowCustomCodeEditor(false)" style="flex: 1;">
                     ❌ Cancel
                 </button>
             </div>
