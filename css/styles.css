@@ -357,16 +357,20 @@
             .header h1 {
                 font-size: 2rem;
             }
-
+			
             .controls-grid {
                 grid-template-columns: 1fr;
                 gap: 15px;
             }
-
+			
+			.primary-button {
+				padding: 20px 70px;
+			}
+			
             .action-buttons {
                 flex-direction: column;
             }
-
+			
             .modal {
                 padding: 25px;
                 margin: 20px;
