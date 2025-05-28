@@ -173,6 +173,84 @@
             box-shadow: 0 8px 25px rgba(255, 107, 107, 0.6);
         }
 
+        /* Modal Button Styles */
+        .modal-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 12px;
+            color: #ffffff;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            flex: 1;
+        }
+
+        .modal-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .modal-btn:hover::before {
+            left: 100%;
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #7c8ff0, #8a5ab8);
+        }
+
+        .modal-btn:active {
+            transform: translateY(0);
+        }
+
+        .modal-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Success/Apply Button Variant */
+        .modal-btn-success {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+        }
+
+        .modal-btn-success:hover {
+            background: linear-gradient(135deg, #5fd4cd, #4fb3a6);
+        }
+
+        /* Cancel/Secondary Button Variant */
+        .modal-btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #5a6268);
+        }
+
+        .modal-btn-secondary:hover {
+            background: linear-gradient(135deg, #7a8086, #656b71);
+        }
+
+        /* Edit Button Variant */
+        .modal-btn-edit {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+			padding: 15px 20px;
+        }
+
+        .modal-btn-edit:hover {
+            background: linear-gradient(135deg, #f4a62a, #eb8c2f);
+        }
+
         .control-group {
             background: rgba(255, 255, 255, 0.05);
 			display: block;
@@ -379,6 +457,11 @@
                 padding: 25px;
                 margin: 20px;
             }
+
+            .modal-btn {
+                padding: 15px 20px;
+                font-size: 14px;
+            }
         }
 
         /* Textarea scrollbar styling - keeping current gradient */
@@ -424,7 +507,5 @@
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(120deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
         }
-
-    </style>
+            background: linear-gradient(120deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
