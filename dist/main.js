@@ -258,7 +258,31 @@ function AutoResizeTextarea(textarea, padding) {
     textarea.style.height = "auto";
     textarea.style.height = (textarea.scrollHeight - padding * 2) + "px";
 }
-function ObfuscateButton() {
+
+async function ObfuscateButton() {
+    const obfuscateButton = document.querySelector('.primary-button');
+    const originalText = obfuscateButton.textContent;
+    const inputText = DOM.codeInputTextArea.value.trim();
+    
+    // 1️⃣ If there's no text, show validation message
+    if (!inputText) {
+        obfuscateButton.textContent = '⚠️ Add Code to Obfuscate';
+        obfuscateButton.disabled = true;
+        obfuscateButton.style.background = 'linear-gradient(135deg, #e74c3c, #c0392b)'; // Red color
+        
+        setTimeout(() => {
+            obfuscateButton.textContent = originalText;
+            obfuscateButton.disabled = false;
+            obfuscateButton.style.background = ''; // Reset to original
+        }, 2500);
+        return;
+    }
+
+    // Show processing state
+    obfuscateButton.textContent = '⏳ Processing...';
+    obfuscateButton.disabled = true;
+    obfuscateButton.style.background = 'linear-gradient(135deg, #f39c12, #e67e22)'; // Orange color for processing
+
     const text = DOM.codeInputTextArea.value;
     const charsetData = (() => {
         switch (charset) {
@@ -289,23 +313,78 @@ function ObfuscateButton() {
             };
         }
     })();
+
     let result = "";
+    
     try {
-        result = Obfuscate(text, {
-            charset: charsetData,
-            variableNameLength,
-            target: codeGenerationTarget,
-            deobfuscationProtection
+        // Force UI update before heavy computation
+        await new Promise(resolve => {
+            requestAnimationFrame(() => {
+                setTimeout(resolve, 100); // Give UI time to render
+            });
         });
-    }
-    catch (ex) {
+
+        // Wrap the synchronous obfuscation in a way that yields control periodically
+        result = await new Promise((resolve, reject) => {
+            const performObfuscation = () => {
+                try {
+                    // The actual obfuscation call
+                    const obfuscationResult = Obfuscate(text, {
+                        charset: charsetData,
+                        variableNameLength,
+                        target: codeGenerationTarget,
+                        deobfuscationProtection
+                    });
+                    resolve(obfuscationResult);
+                } catch (ex) {
+                    reject(ex);
+                }
+            };
+
+            // Use scheduler API if available, otherwise fallback
+            if ('scheduler' in window && 'postTask' in window.scheduler) {
+                window.scheduler.postTask(performObfuscation, { priority: 'user-blocking' });
+            } else if (window.requestIdleCallback) {
+                window.requestIdleCallback(performObfuscation, { timeout: 1000 });
+            } else {
+                setTimeout(performObfuscation, 0);
+            }
+        });
+        
+        // Another frame to ensure smooth transition
+        await new Promise(resolve => requestAnimationFrame(resolve));
+        
+        // 2️⃣ Show success state AFTER obfuscation completes
+        obfuscateButton.textContent = '✅ Obfuscated';
+        obfuscateButton.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)'; // Green color
+        
+        // Set the result
+        DOM.obfuscateResultTextArea.value = result;
+        ShowDownloadButton(true);
+        
+        // Reset button after success state is shown
+        setTimeout(() => {
+            obfuscateButton.textContent = originalText;
+            obfuscateButton.disabled = false;
+            obfuscateButton.style.background = ''; // Reset to original
+        }, 2500); // 2.5 seconds for slower transition
+        
+    } catch (ex) {
+        // Show error state
+        obfuscateButton.textContent = '❌ Error';
+        obfuscateButton.style.background = 'linear-gradient(135deg, #e74c3c, #c0392b)'; // Red color
+        
+        setTimeout(() => {
+            obfuscateButton.textContent = originalText;
+            obfuscateButton.disabled = false;
+            obfuscateButton.style.background = ''; // Reset to original
+        }, 2500);
+        
         if (ex instanceof ObfuscateError) {
             alert(ex.message);
         }
         return;
     }
-    DOM.obfuscateResultTextArea.value = result;
-	ShowDownloadButton(true);
 }
 
 
@@ -361,4 +440,3 @@ windowAny.ObfuscateButton = ObfuscateButton;
 windowAny.HandleOverlayClick = HandleOverlayClick;
 windowAny.ShowDownloadButton = ShowDownloadButton;
 windowAny.DownloadResult = DownloadResult;
-
