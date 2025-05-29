@@ -160,18 +160,125 @@
             transform: none;
         }
 
-        .primary-button {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
-            font-size: 20px;
-            padding: 20px 40px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
-        }
+        /* Primary Button Base State */
+		.primary-button {
+			background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+			font-size: 20px;
+			padding: 20px 40px;
+			border-radius: 15px;
+			box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+		}
 
-        .primary-button:hover {
-            background: linear-gradient(135deg, #ff7979, #f56a7a);
-            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.6);
-        }
+		.primary-button:hover {
+			background: linear-gradient(135deg, #ff7979, #f56a7a);
+			box-shadow: 0 8px 25px rgba(255, 107, 107, 0.6);
+		}
+
+		/* Processing State - Warm Orange (Active/Working) */
+		.primary-button.processing {
+			background: linear-gradient(135deg, #f39c12, #e67e22) !important;
+			cursor: not-allowed;
+			box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+			animation: processingPulse 2s infinite ease-in-out;
+			display: block;
+			margin: auto;
+		}
+
+		@keyframes processingPulse {
+			0%, 100% { 
+				box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+				transform: scale(1);
+			}
+			50% { 
+				box-shadow: 0 8px 25px rgba(243, 156, 18, 0.6);
+				transform: scale(1.02);
+			}
+		}
+
+		/* Success State - Fresh Green (Positive/Complete) */
+		.primary-button.success {
+			background: linear-gradient(135deg, #2ecc71, #27ae60) !important;
+			cursor: not-allowed;
+			box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+			animation: successGlow 0.5s ease-out;
+			display: block;
+			height: 6rem;
+			margin: auto;
+			
+		}
+
+		@keyframes successGlow {
+			0% { 
+				box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+			}
+			50% { 
+				box-shadow: 0 10px 30px rgba(46, 204, 113, 0.8);
+				transform: scale(1.05);
+			}
+			100% { 
+				box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+				transform: scale(1);
+			}
+		}
+
+		/* Error State - Strong Red (Critical/Failed) */
+		.primary-button.error {
+			background: linear-gradient(135deg, #e74c3c, #c0392b) !important;
+			cursor: not-allowed;
+			box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+			animation: errorShake 0.5s ease-in-out;
+			display: block;
+			margin: auto;
+			height: 5rem;
+		}
+
+		@keyframes errorShake {
+			0%, 100% { transform: translateX(0); }
+			25% { transform: translateX(-5px); }
+			75% { transform: translateX(5px); }
+		}
+
+		/* Validation Error State - Warning Red-Orange (Input Issue) */
+		.primary-button.validation-error {
+			background: linear-gradient(135deg, #e67e22, #d35400) !important;
+			cursor: not-allowed;
+			box-shadow: 0 5px 15px rgba(230, 126, 34, 0.4);
+		}
+
+		@keyframes validationPulse {
+			0%, 100% { 
+				box-shadow: 0 5px 15px rgba(230, 126, 34, 0.4);
+			}
+			50% { 
+				box-shadow: 0 8px 25px rgba(230, 126, 34, 0.6);
+			}
+		}
+
+		/* Disabled State Override */
+		.primary-button:disabled {
+			opacity: 0.7;
+			
+		}
+
+		/* Additional visual feedback for better UX */
+		.primary-button.processing::after {
+			content: '';
+			position: absolute;
+			top: 50%;
+			right: 15px;
+			width: 16px;
+			height: 16px;
+			margin-top: -8px;
+			border: 2px solid transparent;
+			border-top-color: rgba(255, 255, 255, 0.8);
+			border-radius: 50%;
+			animation: spin 1s linear infinite;
+		}
+
+		@keyframes spin {
+			0% { transform: rotate(0deg); }
+			100% { transform: rotate(360deg); }
+		}
 
         /* Modal Button Styles */
         .modal-btn {
