@@ -1,4 +1,3 @@
-import { CheckCustomCharacters, Obfuscate, ObfuscateError } from "./lib.js";
 document.title = "Zalgo OBF";
 const DOM = {
     mainPage: document.getElementById("main_page"),
